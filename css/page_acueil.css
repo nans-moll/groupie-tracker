@@ -1,0 +1,83 @@
+@font-face {
+    font-family: 'Cute Notes';
+    src: url('../font/logo.ttf');
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: black;
+}
+
+
+body{
+    min-height: 100vh;
+    height: auto;
+    width: 100vw;
+}
+
+.header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.logo{
+    font-family: 'Cute Notes';
+    font-size: 2rem;
+    color: white;
+    margin: 1rem;
+    text-decoration: none;
+}
+
+.nav > ul {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-around;
+    
+}
+
+.nav > ul > li {
+    list-style: none;
+    margin: 1rem;
+}
+
+.nav > ul > li > a {
+    text-decoration: none;
+    color: white;
+}
+
+ .search {
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+    flex-grow: 1;
+    color: white;
+    margin: 1rem 0;
+}
+
+.search input[type="text"] {
+    display: flex;
+    justify-content: space-around;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid white;
+    border-radius: 4px;
+    width: 400px;
+}
+
+.search button {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: none;
+    background-color: black;
+    color: white;
+    border-radius: 4px;
+    margin-left: 0.5rem;
+    cursor: pointer;
+}
+
+.search button:hover {
+    background-color: firebrick;
+}

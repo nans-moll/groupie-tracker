@@ -11,7 +11,7 @@ import (
 type Movie struct {
 	ID    int    `json:"id"`
 	Title string `json:"title"`
-	Year  string `json:"year"`
+	Year  int    `json:"year"`
 }
 
 type TMDbMovie struct {
@@ -28,29 +28,21 @@ func fetchMoviesFromTMDb(apiKey string) ([]Movie, error) {
 	url := fmt.Sprintf("https://api.themoviedb.org/3/movie/popular?api_key=%s&language=en-US&page=1", apiKey)
 	resp, err := http.Get(url)
 	if err != nil {
-		return nil, fmt.Errorf("failed to fetch movies: %v", err)
+		return nil, err
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("unexpected response status: %s", resp.Status)
-	}
-
 	var tmdbResponse TMDbResponse
 	if err := json.NewDecoder(resp.Body).Decode(&tmdbResponse); err != nil {
-		return nil, fmt.Errorf("failed to decode response: %v", err)
+		return nil, err
 	}
 
 	var movies []Movie
 	for _, tmdbMovie := range tmdbResponse.Results {
-		year := ""
-		if len(tmdbMovie.Year) >= 4 {
-			year = tmdbMovie.Year[:4]
-		}
 		movies = append(movies, Movie{
 			ID:    tmdbMovie.ID,
 			Title: tmdbMovie.Title,
-			Year:  year,
+			Year:  tmdbMovie.Year[:4],
 		})
 	}
 
@@ -66,7 +58,7 @@ func moviesHandler(w http.ResponseWriter, r *http.Request) {
 
 	movies, err := fetchMoviesFromTMDb(apiKey)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("error fetching movies: %v", err), http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -75,13 +67,8 @@ func moviesHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8081"
-	}
-
 	http.HandleFunc("/api/movies", moviesHandler)
 
-	log.Println("Server started on :", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Println("Server started on :8081")
+	log.Fatal(http.ListenAndServe(":8081", nil))
 }
